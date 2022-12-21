@@ -6,16 +6,10 @@ import Movie from "../components/Movie";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 
 function Home() {
-  const [filters = {}, setFilters] = useState({});
+  const [filter, setFilter] = useState('')
   const dispatch = useDispatch();
   const [movies, setMovies] = useState([]);
   const getMovies = async () => {
-    const tempFilters = {};
-    Object.keys(filters).forEach((key) => {
-      if (filters[key]) {
-        tempFilters[key] = filters[key];
-      }
-    });
     try {
       dispatch(ShowLoading());
       const response = await axios.get("/api/movies/get-all-movies");
@@ -42,39 +36,21 @@ function Home() {
             <input
               type="text"
               placeholder="Nombre Pelicula..."
-              value={filters.from}
-              onChange={(e) => setFilters({ ...filters, from: e.target.value })}
-            />
-          </Col>
 
-          <Col lg={6} sm={24}>
-            <div className="d-flex gap-2">
-              <button className="primary-btn" onClick={() => getMovies()}>
-                Filtrar
-              </button>
-              <button
-                className="outlined px-3"
-                onClick={() =>
-                  setFilters({
-                    from: "",
-                  })
-                }
-              >
-                Limpiar
-              </button>
-            </div>
+              onChange={(e) => setFilter(e.target.value)}
+            />
           </Col>
         </Row>
       </div>
       <div>
         <Row gutter={[15, 15]}>
-          {movies
-            .filter((movie) => movie.status === "Yet To Start")
-            .map((movie) => (
-              <Col lg={6} xs={24} sm={24}>
-                <Movie movie={movie} />
-              </Col>
-            ))}
+          {
+            movies.filter(mov => mov.name.toLowerCase().includes(filter.toLowerCase())).map(movie => (
+                <Col lg={6} xs={24} sm={24}>
+                  <Movie movie={movie} />
+                </Col>
+            ))
+          }
         </Row>
       </div>
     </div>
