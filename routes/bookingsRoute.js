@@ -25,7 +25,7 @@ router.post("/book-seat", async (req, res) => {
     function (err, doc) {
       if (err) {
         return res.status(500).json({ err: err.message });
-      } else return res.json({ doc, message: "Compra realizada con exito" });
+      } else return res.json({ doc, message: "Successfully updated!" });
     }
   );
 });
